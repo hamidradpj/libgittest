@@ -9,15 +9,22 @@ namespace libgittest
         {
 
             string gitPath = Repository.Init("./");
+
             using (var repo = new Repository(gitPath))
             {
-                // Add Master Branch
                 Identity identity = new Identity("Hamid", "h.irannejad@parsjahd.com");
-
-                repo.CreateBranch("Hamid",repo.Commit("Master branch created",new Signature(identity,DateTimeOffset.Now), new Signature(identity, DateTimeOffset.Now)));
+                Commit commit = repo.Commit("first commit", new Signature(identity, DateTimeOffset.Now), new Signature(identity, DateTimeOffset.Now));
+                repo.CreateBranch("Hamid");
                 foreach (var b in repo.Branches)
                 {
                     Console.WriteLine($"{b.FriendlyName}");
+                }
+                var branch = repo.Branches["Hamid"];
+                if (branch is not null)
+                {
+                    var b =Commands.Checkout(repo, branch);
+                    repo.CreateBranch("Hamid2");
+
                 }
             }
             Console.ReadLine();
